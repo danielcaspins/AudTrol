@@ -6,7 +6,6 @@ app = Flask(__name__)
 def home():
     return "Audio server running on localhost:8089"
 
-# Route to serve an audio file
 @app.route("/audio/<filename>")
 def get_audio(filename):
     try:
@@ -14,7 +13,6 @@ def get_audio(filename):
         file_path = f"audio_files/{filename}"
         return send_file(file_path, mimetype="audio/mpeg")  # or audio/wav
     except Exception as e:
-        # errorMsg = f"Error getting audio file: {e}"
         return {"error": str(e)}, 404
 
 if __name__ == "__main__":
