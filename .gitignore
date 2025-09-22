@@ -1,6 +1,10 @@
 # Created by https://www.toptal.com/developers/gitignore/api/visualstudio,c++
 # Edit at https://www.toptal.com/developers/gitignore?templates=visualstudio,c++
 
+### python ###
+*.wav
+*.idea
+
 ### C++ ###
 # Prerequisites
 *.d
