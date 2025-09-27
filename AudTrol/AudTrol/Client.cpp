@@ -27,11 +27,18 @@ Client::~Client()
 std::vector<char> Client::recieve_data(const size_t size) const
 {
 	std::vector<char> data(size);
-	CHECK(recv(m_sock, data.data(), size, 0), SOCKET_ERROR, "couldn't recive data");
-	return data;
+	size_t amount_of_bytes_read = recv(m_sock, data.data(), size, 0);
+	CHECK(amount_of_bytes_read, SOCKET_ERROR, "couldn't recive data");
+	data.resize(amount_of_bytes_read);
+	return std::move(data);
 }
 
 void Client::send_data(const std::vector<char>& data) const
+{
+	CHECK(send(m_sock, data.data(), data.size(), 0), SOCKET_ERROR, "couldn't send data");
+}
+
+void Client::send_data(const std::string& data) const
 {
 	CHECK(send(m_sock, data.data(), data.size(), 0), SOCKET_ERROR, "couldn't send data");
 }
