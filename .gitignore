@@ -4,7 +4,6 @@
 ### python ###
 *.wav
 *.idea
-*.env
 
 ### C++ ###
 # Prerequisites
