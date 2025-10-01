@@ -11,8 +11,7 @@
 {															     \
 	std::cout << WSAGetLastError() << std::endl;                    \
 	throw std::exception((string));							     \
-}                                                           
-
+}
 
 
 

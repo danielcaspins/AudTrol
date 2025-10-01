@@ -38,6 +38,8 @@ private:
 	IAudioRenderClient* m_renderer;
 	IAudioClient* m_client;
 	WAVEFORMATEX* m_format;
+	BYTE* m_audio_buffer;
+	UINT32 m_audio_buffer_size;
 };
 
 
