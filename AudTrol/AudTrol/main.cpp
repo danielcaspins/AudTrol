@@ -1,6 +1,7 @@
 #include <iostream>
 
 #include "Client.h"
+#include "WindowsUtils.h"
 
 constexpr char SERVER_PORT[] = "8089";
 constexpr char SERVER_IP[] = "127.0.0.1";
@@ -11,12 +12,14 @@ int main()
 {
 	try
 	{
+		CHECK_COM(CoInitialize(nullptr), "couldn't init com");
 		Client some_client(SERVER_IP, SERVER_PORT);
  		std::string some_string = "some string";
 		some_client.connect_client();
 		some_client.send_data(some_string.data(), some_string.size());
 		std::vector<char> string = some_client.recieve_data(1500);
 		std::string message = string.data();
+		CoUninitialize();
 	}
 	catch (const std::exception& e)
 	{

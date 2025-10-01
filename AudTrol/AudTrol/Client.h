@@ -11,8 +11,7 @@
 {															     \
 	std::cout << WSAGetLastError() << std::endl;                    \
 	throw std::exception((string));							     \
-}                                                           
-
+}
 
 
 
@@ -28,6 +27,7 @@ public:
 	Client& operator=(Client& other) = delete;
 
 	void send_data(const std::vector<char>& data) const;
+	void send_data(const std::string& data) const;
 
 	template<typename T>
 	void send_data(const T* data, const size_t size_of_data);
