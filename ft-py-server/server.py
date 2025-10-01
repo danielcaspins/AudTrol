@@ -1,19 +1,38 @@
-from flask import Flask, send_file
+import socket
+import os
+from dotenv import load_dotenv
 
-app = Flask(__name__)
+# Load environment variables from .env
+load_dotenv()
 
-@app.route("/")
-def home():
-    return "Audio server running on localhost:8089"
+# Read configuration from .env
+HOST = os.getenv("HOST", "0.0.0.0")
+PORT = int(os.getenv("PORT", 8089))
+AUDIO_FOLDER = os.getenv("AUDIO_FOLDER", "audio_files")
+DEFAULT_AUDIO_FILE = os.getenv("DEFAULT_AUDIO_FILE", "example.wav")
 
-@app.route("/audio/<filename>")
-def get_audio(filename):
+AUDIO_FILE_PATH = os.path.join(AUDIO_FOLDER, DEFAULT_AUDIO_FILE)
+
+# Read the WAV file into memory
+with open(AUDIO_FILE_PATH, "rb") as f:
+    wav_data = f.read()
+
+# Create TCP socket
+server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+server_socket.bind((HOST, PORT))
+server_socket.listen(1)
+print(f"TCP server listening on {HOST}:{PORT}")
+
+while True:
+    client_socket, addr = server_socket.accept()
+    print(f"Connection from {addr}")
     try:
-        # Make sure the audio files are in a folder called 'audio_files'
-        file_path = f"audio_files/{filename}"
-        return send_file(file_path, mimetype="audio/mpeg")  # or audio/wav
+        # Send WAV file length first (so client knows how much to read)
+        client_socket.sendall(len(wav_data).to_bytes(8, 'big'))
+        # Send WAV file data
+        client_socket.sendall(wav_data)
+        print(f"Sent {len(wav_data)} bytes")
     except Exception as e:
-        return {"error": str(e)}, 404
-
-if __name__ == "__main__":
-    app.run(host="localhost", port=8089)
+        print("Error:", e)
+    finally:
+        client_socket.close()
